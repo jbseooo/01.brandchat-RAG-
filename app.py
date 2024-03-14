@@ -30,7 +30,7 @@ PINECONE_KEY = st.secrets['PINECONE_KEY']
 st.set_page_config(page_title="BrandChat", page_icon="🦜", layout="wide")
 os.environ['PINECONE_API_KEY'] = PINECONE_KEY
 
-pinecone_api_key = os.environ.get('PINECONE_API_KEY')
+pinecone_api_key = os.environ.get(PINECONE_KEY)
 pinecone  = Pinecone(api_key=pinecone_api_key)
 
 css='''
