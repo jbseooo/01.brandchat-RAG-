@@ -49,9 +49,7 @@ st.markdown("""
             </div>
             """,unsafe_allow_html=True)
 
-ex = st.expander("안녕하세요. 여러분의 궁금증을 해결 해 줄 BrandChatbot  입니다!")
-
-ex.markdown("""
+st.markdown("""
             <div style="font-size: 15px; padding: 10px;">Brandbook을 보면서 궁금했거나, 좀 더 알아보고 싶었던 것이 있으셨나요? 
             여기 <span style="font-weight: bold;">BrandChatbot</span>을 통해 질문해주세요</div>
             """, unsafe_allow_html=True)
