@@ -15,9 +15,15 @@
     margin: 10px auto;
 }
 
-.st-emotion-cache-1c7y2kd {
+/* .st-emotion-cache-1c7y2kd {
     flex-direction: row-reverse;
     text-align: right;
+} */
+
+[class^="stChatMessage"][class$="st-emotion-cache-"] {
+    /* 여기에 CSS 속성을 추가합니다. */
+    /* 예시: 배경색을 파란색으로 지정 */
+    background-color: blue;
 }
 
 .st-emotion-cache-1c7y2kd > st-emotion-cache-1flajlm {
