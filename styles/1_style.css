@@ -20,7 +20,7 @@
     text-align: right;
 } */
 
-[class^="stChatMessage"] {
+[class^="stChatMessage"]: first-child {
     background-color: blue;
 }
 
