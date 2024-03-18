@@ -20,9 +20,7 @@
     text-align: right;
 } */
 
-[class^="stChatMessage"][class$="st-emotion-cache-"] {
-    /* 여기에 CSS 속성을 추가합니다. */
-    /* 예시: 배경색을 파란색으로 지정 */
+[class^="stChatMessage"] {
     background-color: blue;
 }
 
