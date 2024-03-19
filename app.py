@@ -136,7 +136,7 @@ qa_chain = ConversationalRetrievalChain.from_llm(
 
 
 # React to user input
-if userquery := st.chat_input("What is up?"):
+if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있다면 편하게 질문해주세요!"):
     # Display user message in chat message container
     st.chat_message("user").markdown(userquery)
     # user message 추가
