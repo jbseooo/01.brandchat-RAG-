@@ -144,8 +144,8 @@ qa_chain = ConversationalRetrievalChain.from_llm(
     get_chat_history = lambda h:h,
     return_source_documents=False,
     rephrase_question = False,
-    # condense_question_prompt = QA_PROMPT,
-    combine_docs_chain_kwargs={"prompt": QA_PROMPT},
+    condense_question_prompt = QA_PROMPT,
+    combine_docs_chain_kwargs={"prompt": qa_prompt},
     chain_type = 'stuff',
 )
 
