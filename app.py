@@ -83,7 +83,7 @@ llm = ChatOpenAI(
 msgs = StreamlitChatMessageHistory(key= 'chat_history')
 # memory 초기화
 if "memory" not in st.session_state:
-    st.session_state.memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=200, memory_key='chat_history', chat_memory=msgs, return_messages=False)
+    st.session_state.memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=500, memory_key='chat_history', chat_memory=msgs, return_messages=False)
 
 # chat history 초기화
 if "history" not in st.session_state:
