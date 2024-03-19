@@ -1,37 +1,28 @@
-import os
-import tempfile
 import streamlit as st
-from langchain_openai import ChatOpenAI
-from langchain.memory import ConversationBufferMemory, ConversationBufferWindowMemory
-from langchain_community.chat_message_histories import StreamlitChatMessageHistory
-from langchain.callbacks.base import BaseCallbackHandler
-from langchain.chains import ConversationalRetrievalChain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain_community.document_loaders import PyPDFLoader
-import tiktoken
-from langchain_community.retrievers import BM25Retriever
-from langchain.retrievers import EnsembleRetriever
-from langchain.prompts import ChatPromptTemplate
-
-
-
-########################## pinecone
-from pinecone_text.sparse import BM25Encoder
-from langchain_community.retrievers import PineconeHybridSearchRetriever
-from langchain.vectorstores import Pinecone as pinecone_vector
+import os
 from pinecone import Pinecone
+
+from langchain_community.vectorstores import Pinecone as pinecone_vector
+from langchain.memory import ConversationSummaryBufferMemory
+from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+from langchain_openai import OpenAIEmbeddings,ChatOpenAI
+from langchain_core.prompts import SystemMessagePromptTemplate,  HumanMessagePromptTemplate
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import ConversationalRetrievalChain
+from langchain.callbacks.base import BaseCallbackHandler
+
 
 
 OPENAI_KEY = st.secrets['OPENAI_KEY']
 PINECONE_KEY = st.secrets['PINECONE_KEY']
+
 
 st.set_page_config(page_title="BrandChat", page_icon="🦜", layout="wide")
 os.environ['PINECONE_API_KEY'] = PINECONE_KEY
 
 pinecone_api_key = os.environ.get(PINECONE_KEY)
 pinecone  = Pinecone(api_key=pinecone_api_key)
+
 
 css='''
 <style>
@@ -60,16 +51,14 @@ avatars = {"human": "user", "ai": "assistant"}
 st.chat_message(avatars['ai']).write('저는 BrandChat 입니다. 궁금하신 사항이 있으실 경우 말씀주세요')
 
 
-# Create embeddings and store in vectordb
 embeddings_model = OpenAIEmbeddings(openai_api_key=OPENAI_KEY, model = "text-embedding-ada-002")
 
-
+## vector db load
 vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
 vectorstore2 = vectorstore.as_retriever()
 
 
 class StreamHandler(BaseCallbackHandler):
-    
     def __init__(self, container: st.delta_generator.DeltaGenerator, initial_text: str = ""):
         self.container = container
         self.text = initial_text
@@ -86,36 +75,77 @@ class StreamHandler(BaseCallbackHandler):
         self.text += token
         self.container.markdown(self.text)
 
-
-
-
-# Setup memory for contextual conversation
-msgs = StreamlitChatMessageHistory()
-memory = ConversationBufferWindowMemory(k =5, memory_key="chat_history", chat_memory=msgs, return_messages=True)
-
-template = """Answer the question based only on the following context:
-{context}
-
-Question: {question}
-"""
-tmpl= ChatPromptTemplate.from_template(template)
-
-# Setup LLM and QA chain
 llm = ChatOpenAI(
     model_name="gpt-3.5-turbo", openai_api_key=OPENAI_KEY, temperature=0.3, streaming=True)
 
+
+
+msgs = StreamlitChatMessageHistory(key= 'chat_history')
+# memory 초기화
+if "memory" not in st.session_state:
+    st.session_state.memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=50, memory_key='chat_history', chat_memory=msgs, return_messages=False)
+
+# chat history 초기화
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+# messages 초기화
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+
+
+
+# prompt 설정
+
+system_template = """
+저는 크레버스 FSO Brand MKT 본부에서 만들어진 BrandChat 입니다.
+Remember the chat history when you answer
+Chat History:
+{chat_history}
+
+----------------
+{context}"""
+
+# chat prompt templates
+messages = [
+SystemMessagePromptTemplate.from_template(system_template),
+HumanMessagePromptTemplate.from_template("{question}")
+]
+qa_prompt = ChatPromptTemplate.from_messages(messages)
+
+# display chat
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+
+# retrievalchain 설정
 qa_chain = ConversationalRetrievalChain.from_llm(
-    llm, retriever=vectorstore2, memory=memory, verbose=True
+    llm = llm,
+    retriever=vectorstore2,
+    memory=st.session_state.memory,
+    verbose=True,
+    get_chat_history = lambda h:h,
+    return_source_documents=False,
+    rephrase_question = False,
+    combine_docs_chain_kwargs={"prompt": qa_prompt},
+    chain_type = 'stuff',
 )
 
 
-for msg in msgs.messages:
-    st.chat_message(avatars[msg.type]).write(msg.content)
-
-user_query = st.chat_input("궁금하신게 있으시면 언제든 물어봐주세요!")
-
-if user_query :
-    st.chat_message("user").markdown(user_query)
+# React to user input
+if userquery := st.chat_input("What is up?"):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(userquery)
+    # user message 추가
+    st.session_state.messages.append({"role": "user", "content": userquery})
     with st.chat_message("assistant"):
-            stream_handler = StreamHandler(st.empty())
-            response = qa_chain.run(user_query, callbacks=[stream_handler])
+        stream_handler = StreamHandler(st.empty())
+        response = qa_chain.run(userquery, callbacks=[stream_handler])
+
+        # assistant message 추가
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        # memory 추가
+        st.session_state.memory.save_context({'input:':userquery}, {'output':response})
