@@ -148,4 +148,4 @@ if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있�
         # assistant message 추가
         st.session_state.messages.append({"role": "assistant", "content": response})
         # memory 추가
-        st.session_state.memory.save_context({'input:':userquery}, {'output':response})
+        # st.session_state.memory.save_context({'input:':userquery}, {'output':response})
