@@ -104,7 +104,7 @@ Remember the chat history when you answer
 Chat History:
 {chat_history}
 Follow Up Input: {question}
-Standalone question:"""
+{context}"""
 
 
 QA_PROMPT = PromptTemplate(template=template, input_variables=[
