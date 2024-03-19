@@ -6,7 +6,7 @@ from langchain_community.vectorstores import Pinecone as pinecone_vector
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from langchain_openai import OpenAIEmbeddings,ChatOpenAI
-from langchain_core.prompts import SystemMessagePromptTemplate,  HumanMessagePromptTemplate
+from langchain_core.prompts import SystemMessagePromptTemplate,  HumanMessagePromptTemplate,PromptTemplate
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import ConversationalRetrievalChain
 from langchain.callbacks.base import BaseCallbackHandler
