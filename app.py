@@ -108,8 +108,7 @@ Follow Up Input: {question}
 
 
 QA_PROMPT = PromptTemplate(template=template, input_variables=[
-                           "question", "context","chat_history"])
-
+                           "question","chat_history"])
 
 
 system_template = """
