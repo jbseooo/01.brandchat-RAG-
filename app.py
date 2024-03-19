@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from pinecone import Pinecone
+from langchain_community.vectorstores import Pinecone
 
 from langchain_community.vectorstores import Pinecone as pinecone_vector
 from langchain.memory import ConversationSummaryBufferMemory
