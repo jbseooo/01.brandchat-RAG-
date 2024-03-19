@@ -97,6 +97,20 @@ if "messages" not in st.session_state:
 
 
 # prompt 설정
+template = """
+저는 크레버스 FSO Brand MKT 본부에서 만들어진 BrandChat 입니다.
+Remember the chat history when you answer
+
+Chat History:
+{chat_history}
+Follow Up Input: {question}
+Standalone question:"""
+
+
+QA_PROMPT = PromptTemplate(template=template, input_variables=[
+                           "question", "context","chat_history"])
+
+
 
 system_template = """
 저는 크레버스 FSO Brand MKT 본부에서 만들어진 BrandChat 입니다.
@@ -130,6 +144,7 @@ qa_chain = ConversationalRetrievalChain.from_llm(
     get_chat_history = lambda h:h,
     return_source_documents=False,
     rephrase_question = False,
+    condense_question_prompt = QA_PROMPT,
     combine_docs_chain_kwargs={"prompt": qa_prompt},
     chain_type = 'stuff',
 )
