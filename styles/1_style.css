@@ -20,6 +20,12 @@
     text-align: right;
 }
 
+
+.st-emotion-cache-janbn0 {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
 /* [class^="stChatMessage"]:first-child {
     background-color: blue;
 }
