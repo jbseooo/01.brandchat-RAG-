@@ -54,7 +54,7 @@ st.chat_message(avatars['ai']).write('저는 BrandChat 입니다. 궁금하신 �
 
 embeddings_model = OpenAIEmbeddings(openai_api_key=OPENAI_KEY, model = "text-embedding-ada-002")
 
-bm25_encoder = BM25Encoder().load(".data/sparse.json")
+bm25_encoder = BM25Encoder().load("./data/sparse.json")
 hybrid_retriever= PineconeHybridSearchRetriever(
     embeddings=embeddings_model, sparse_encoder=bm25_encoder, index='test', top_k=int(2) , alpha=float(0.5))
 
