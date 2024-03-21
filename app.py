@@ -10,7 +10,8 @@ from langchain_core.prompts import SystemMessagePromptTemplate,  HumanMessagePro
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import ConversationalRetrievalChain
 from langchain.callbacks.base import BaseCallbackHandler
-
+from pinecone_text.sparse import BM25Encoder
+from langchain_community.retrievers import PineconeHybridSearchRetriever
 
 
 OPENAI_KEY = st.secrets['OPENAI_KEY']
