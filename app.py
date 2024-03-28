@@ -54,13 +54,13 @@ st.chat_message(avatars['ai']).write('저는 BrandChat 입니다. 궁금하신 �
 
 embeddings_model = OpenAIEmbeddings(openai_api_key=OPENAI_KEY, model = "text-embedding-ada-002")
 
-# bm25_encoder = BM25Encoder().load("./data/sparse.json")
-# hybrid_retriever= PineconeHybridSearchRetriever(
-#     embeddings=embeddings_model, sparse_encoder=bm25_encoder, index='test', top_k=int(2) , alpha=float(0.5))
+bm25_encoder = BM25Encoder().load("./data/sparse.json")
+hybrid_retriever= PineconeHybridSearchRetriever(
+    embeddings=embeddings_model, sparse_encoder=bm25_encoder, index='test', top_k=int(2) , alpha=float(0.5))
 
-# # ## vector db load
-vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
-vectorstore2 = vectorstore.as_retriever()
+## vector db load
+# vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
+# vectorstore2 = vectorstore.as_retriever()
 
 
 class StreamHandler(BaseCallbackHandler):
@@ -142,7 +142,7 @@ for message in st.session_state.messages:
 # retrievalchain 설정
 qa_chain = ConversationalRetrievalChain.from_llm(
     llm = llm,
-    retriever=vectorstore2,
+    retriever=hybrid_retriever,
     memory=st.session_state.memory,
     verbose=True,
     get_chat_history = lambda h:h,
