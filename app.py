@@ -60,8 +60,8 @@ hybrid_retriever= PineconeHybridSearchRetriever(
     embeddings=embeddings_model, sparse_encoder=bm25_encoder, index="test", top_k=int(2) , alpha=float(0.5))
 
 ## vector db load
-# vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
-# vectorstore2 = vectorstore.as_retriever()
+vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
+vectorstore2 = vectorstore.as_retriever()
 
 
 class StreamHandler(BaseCallbackHandler):
@@ -143,7 +143,7 @@ for message in st.session_state.messages:
 # retrievalchain 설정
 qa_chain = ConversationalRetrievalChain.from_llm(
     llm = llm,
-    retriever=hybrid_retriever,
+    retriever=vectorstore2,
     memory=st.session_state.memory,
     verbose=True,
     get_chat_history = lambda h:h,
