@@ -57,7 +57,7 @@ index = pinecone.Index("test")
 
 bm25_encoder = BM25Encoder().load("./data/sparse.json")
 hybrid_retriever= PineconeHybridSearchRetriever(
-    embeddings=embeddings_model, sparse_encoder=bm25_encoder, index='test, top_k=int(2) , alpha=float(0.5))
+    embeddings=embeddings_model, sparse_encoder=bm25_encoder, index="test", top_k=int(2) , alpha=float(0.5))
 
 ## vector db load
 # vectorstore = pinecone_vector.from_existing_index(index_name="test", embedding=embeddings_model)
