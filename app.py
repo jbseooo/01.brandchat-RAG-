@@ -142,7 +142,7 @@ for message in st.session_state.messages:
 # retrievalchain 설정
 qa_chain = ConversationalRetrievalChain.from_llm(
     llm = llm,
-    retriever=hybrid_retriever,
+    retriever=vectorstore2,
     memory=st.session_state.memory,
     verbose=True,
     get_chat_history = lambda h:h,
