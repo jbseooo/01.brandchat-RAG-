@@ -91,8 +91,8 @@ if "memory" not in st.session_state:
     st.session_state.memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=500, memory_key='chat_history', chat_memory=msgs, return_messages=False)
 
 # chat history 초기화
-if "chat history" not in st.session_state:
-    st.session_state.chat history = []
+if "chat_history" not in st.session_state:
+    st.session_state.chat chat_history = []
 
 # messages 초기화
 if "messages" not in st.session_state:
