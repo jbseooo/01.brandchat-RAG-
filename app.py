@@ -92,7 +92,7 @@ if "memory" not in st.session_state:
 
 # chat history 초기화
 if "chat_history" not in st.session_state:
-    st.session_state.chat chat_history = []
+    st.session_state.chat_history = []
 
 # messages 초기화
 if "messages" not in st.session_state:
