@@ -1,3 +1,4 @@
+section.main > div {max-width:956px}
 .section_title {
     font-size: 40px;
     font-weight: bold;
@@ -26,13 +27,47 @@
     text-align: right;
 }
 
-/* [class^="stChatMessage"]:first-child {
-    background-color: blue;
-}
 
-.st-emotion-cache-1c7y2kd > st-emotion-cache-1flajlm {
-    background: linear-gradient(135deg, rgb(0, 178, 255) 0%, rgb(0, 106, 255) 100%); 
-    color: white;
-    border-radius: 20px;
+@media (max-width: 380px)  {
+    [data-testid='stApp']{
+        background-color: #f5f5f5;
+    }
+    
+    [data-testid="stBottomBlockContainer"]{
+        background-color: #f5f5f5;
+    }
+    
+    header {
+        visibility: hidden;
+    }
+    section.main > div 
+    {max-width:956px; background-color: #f5f5f5;
+    }
+    
+    #root > div:nth-child(1) > div > div > div > div > section > div {
+        padding-top: 0rem;
+    }
+    .section_title{
+        display: none;
+    }
+    .sub_title{
+        display: none;
+    }
+    [data-testid="chatAvatarIcon-assistant"]{
+        height: 30%;
+    }
+
+    [data-testid='stMarkdownContainer']>p{
+        font-size: 16px;
+        font-family: 'SUIT-Regular', sans-serif;
+    }
+    [data-testid="chatAvatarIcon-assistant"]{
+        width: 32px;
+        height: 32px;
+        padding-left: 0;
+    }
+    [data-testid="stChatMessage"]{
+        padding-left: 5px;
+        padding-right: 5px
+    }
 }
- */
