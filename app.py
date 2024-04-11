@@ -12,18 +12,23 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.callbacks.base import BaseCallbackHandler
 from pinecone_text.sparse import BM25Encoder
 from langchain_community.retrievers import PineconeHybridSearchRetriever
-
+from pymongo.mongo_client import MongoClient
 
 OPENAI_KEY = st.secrets['OPENAI_KEY']
 PINECONE_KEY = st.secrets['PINECONE_KEY']
-
+MONGO_URI = st.secrets['uri']
 
 st.set_page_config(page_title="BrandChat", page_icon="🦜", layout="wide")
 os.environ['PINECONE_API_KEY'] = PINECONE_KEY
 
 pinecone_api_key = os.environ.get(PINECONE_KEY)
 pinecone  = Pinecone(api_key=pinecone_api_key)
+URI = 
+@st.cache_resource
+def init_connection():
+    return MongoClient(MONGO_URI)
 
+db = init_connection()
 
 css='''
 <style>
@@ -161,6 +166,8 @@ if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있�
     st.chat_message("user").markdown(userquery)
     # user message 추가
     st.session_state.messages.append({"role": "user", "content": userquery})
+    qu = {'question':userquery}
+    db.ST_question.question.insert_one(qu)
     with st.chat_message("assistant"):
         stream_handler = StreamHandler(st.empty())
         response = qa_chain.run(userquery, callbacks=[stream_handler])
