@@ -23,7 +23,7 @@ os.environ['PINECONE_API_KEY'] = PINECONE_KEY
 
 pinecone_api_key = os.environ.get(PINECONE_KEY)
 pinecone  = Pinecone(api_key=pinecone_api_key)
-URI = 
+
 @st.cache_resource
 def init_connection():
     return MongoClient(MONGO_URI)
