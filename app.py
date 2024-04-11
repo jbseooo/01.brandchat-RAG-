@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import time
 from pinecone import Pinecone
 
 from langchain_community.vectorstores import Pinecone as pinecone_vector
@@ -166,13 +167,13 @@ if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있�
     st.chat_message("user").markdown(userquery)
     # user message 추가
     st.session_state.messages.append({"role": "user", "content": userquery})
-    qu = {'question':userquery}
-    db.ST_question.question.insert_one(qu)
     with st.chat_message("assistant"):
         stream_handler = StreamHandler(st.empty())
         response = qa_chain.run(userquery, callbacks=[stream_handler])
 
         # assistant message 추가
         st.session_state.messages.append({"role": "assistant", "content": response})
+        item = {'question':userquery, 'time':time.strftime('%Y-%m-%d %H:%M:%S'), 'answer':response}
+        db.ST_question.question.insert_one(item)
         # memory 추가
         # st.session_state.memory.save_context({'input:':userquery}, {'output':response})
