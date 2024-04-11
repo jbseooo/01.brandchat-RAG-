@@ -1,6 +1,8 @@
 import streamlit as st
 import os
-import time
+from datetime import datetime
+import pytz
+
 from pinecone import Pinecone
 
 from langchain_community.vectorstores import Pinecone as pinecone_vector
@@ -24,6 +26,11 @@ os.environ['PINECONE_API_KEY'] = PINECONE_KEY
 
 pinecone_api_key = os.environ.get(PINECONE_KEY)
 pinecone  = Pinecone(api_key=pinecone_api_key)
+
+## time setting
+korea_time_zone = pytz.timezone('Asia/Seoul')
+current_time_korea = datetime.now(pytz.utc).astimezone(korea_time_zone)
+formatted_time = current_time_korea.strftime('%Y-%m-%d %H:%M:%S')
 
 @st.cache_resource
 def init_connection():
@@ -173,7 +180,7 @@ if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있�
 
         # assistant message 추가
         st.session_state.messages.append({"role": "assistant", "content": response})
-        item = {'question':userquery, 'time':time.strftime('%Y-%m-%d %H:%M:%S'), 'answer':response}
+        item = {'question':userquery, 'time':formatted_time, 'answer':response}
         db.ST_question.question.insert_one(item)
         # memory 추가
         # st.session_state.memory.save_context({'input:':userquery}, {'output':response})
