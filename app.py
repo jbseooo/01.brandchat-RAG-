@@ -38,6 +38,12 @@ def init_connection():
 
 db = init_connection()
 
+### unique id 생성
+if len(list(db.ST_question.question.find({}, {'_id': False}))) == 0:
+    idnum = 1
+else:
+    idnum = db.ST_question.question.find_one(sort=[("idnum", -1)])["idnum"] + 1
+    
 css='''
 <style>
     section.main > div {max-width:956px}
@@ -111,6 +117,9 @@ if "history" not in st.session_state:
 # messages 초기화
 if "messages" not in st.session_state:
     st.session_state.messages = []
+# unique id 초기화
+if "id" not in st.session_state:
+    st.session_state.id = idnum
 
 
 
@@ -180,7 +189,7 @@ if userquery := st.chat_input("BrandPlaybook에 대해 궁금하신 점이 있�
 
         # assistant message 추가
         st.session_state.messages.append({"role": "assistant", "content": response})
-        item = {'question':userquery, 'time':formatted_time, 'answer':response}
+        item = {'idnum':st.session_state.id,'question':userquery, 'time':formatted_time, 'answer':response}
         db.ST_question.question.insert_one(item)
         # memory 추가
         # st.session_state.memory.save_context({'input:':userquery}, {'output':response})
