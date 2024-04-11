@@ -44,13 +44,6 @@ if len(list(db.ST_question.question.find({}, {'_id': False}))) == 0:
 else:
     idnum = db.ST_question.question.find_one(sort=[("idnum", -1)])["idnum"] + 1
     
-css='''
-<style>
-    section.main > div {max-width:956px}
-</style>
-'''
-st.markdown(css, unsafe_allow_html=True)
-
 with open('./styles/1_style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
