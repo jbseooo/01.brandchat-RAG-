@@ -121,7 +121,7 @@ if "id" not in st.session_state:
 template = """
 저는 크레버스 FSO Brand MKT 본부에서 만들어진 BrandChat 입니다.
 Remember the chat history when you answer
-
+Please always answer in Korean according to the context. Please explain kindly, and in detail and systematically. If you don't know the answer, just tell me you don't know. You should never make fiction
 Chat History:
 {chat_history}
 Follow Up Input: {question}
@@ -135,6 +135,7 @@ QA_PROMPT = PromptTemplate(template=template, input_variables=[
 system_template = """
 저는 크레버스 FSO Brand MKT 본부에서 만들어진 BrandChat 입니다.
 Remember the chat history when you answer
+Please always answer in Korean according to the context. Please explain kindly, and in detail and systematically. If you don't know the answer, just tell me you don't know. You should never make fiction
 Chat History:
 {chat_history}
 
